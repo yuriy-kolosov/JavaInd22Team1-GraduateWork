@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
@@ -38,7 +38,7 @@ public class CommentController {
                                description = "OK",
                                content = @Content(
                                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
+                                       schema = @Schema(implementation = Comment.class)
                                )),
                        @ApiResponse(
                                responseCode = "401",
@@ -50,7 +50,7 @@ public class CommentController {
                        )
                })
     @PostMapping(value = "/{id}/comments")
-    public CommentDTO addComment(@PathVariable Long id, @Valid CommentDTO comment) throws IOException {
+    public Comment addComment(@PathVariable Long id, @Valid Comment comment) throws IOException {
         commentService.add(comment);
         return comment;
     }
@@ -62,7 +62,7 @@ public class CommentController {
                                description = "OK",
                                content = @Content(
                                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
+                                       schema = @Schema(implementation = Comment.class)
                                )),
                        @ApiResponse(
                                responseCode = "401",
@@ -74,7 +74,7 @@ public class CommentController {
                        )
                })
     @GetMapping("/{id}/comments")
-    public CommentDTO get(@PathVariable Long id) {
+    public Comment get(@PathVariable Long id) {
         return commentService.getComment(id);
     }
 
@@ -85,7 +85,7 @@ public class CommentController {
                                description = "OK",
                                content = @Content(
                                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
+                                       schema = @Schema(implementation = Comment.class)
                                )),
                        @ApiResponse(
                                responseCode = "401",
@@ -101,7 +101,7 @@ public class CommentController {
                        )
                })
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public void delete(@Valid CommentDTO comment) {
+    public void delete(@Valid Comment comment) {
         commentService.delete(comment);
     }
 
@@ -120,7 +120,7 @@ public class CommentController {
                        )
                })
     @PatchMapping("/{adId}/comments/{commentId}")
-    public CommentDTO update(CommentDTO comment) {
+    public Comment update(Comment comment) {
         return commentService.update(comment);
     }
 }
