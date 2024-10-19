@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 @Data
 public class Comment {

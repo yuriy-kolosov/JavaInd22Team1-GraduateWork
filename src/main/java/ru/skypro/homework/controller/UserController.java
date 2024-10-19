@@ -13,7 +13,7 @@ import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Tag(name = "Пользователи")
 @RestController
