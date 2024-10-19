@@ -1,23 +1,27 @@
 package ru.skypro.homework.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Id;
-
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "comments")
 public class Comment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    private String author;
-    private String authorImage;
-    private String authorFirstName;
-    private Integer createdAt;
-    private Integer pk;
+    private Long author;
+    private LocalDateTime createdAt;
     private String text;
 
 }
