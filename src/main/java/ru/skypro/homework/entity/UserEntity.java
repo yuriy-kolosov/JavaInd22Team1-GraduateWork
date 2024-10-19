@@ -38,10 +38,10 @@ public class UserEntity {
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+//
+//    @Column(name = "role")
+//    @Enumerated(EnumType.STRING)
+    private int role;
 
     @Column(name = "password")
     private String password;
