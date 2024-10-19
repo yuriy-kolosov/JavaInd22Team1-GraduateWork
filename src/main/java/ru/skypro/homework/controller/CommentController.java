@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
@@ -50,9 +50,8 @@ public class CommentController {
                        )
                })
     @PostMapping(value = "/{id}/comments")
-    public Comment addComment(@PathVariable Long id, @Valid Comment comment) throws IOException {
-        commentService.add(comment);
-        return comment;
+    public CommentDTO add(@PathVariable Long id, @Valid Comment comment) {
+        return commentService.add(comment);
     }
 
     @Operation(summary = "Получение комментариев объявления", tags = "Комментарии",
@@ -74,7 +73,7 @@ public class CommentController {
                        )
                })
     @GetMapping("/{id}/comments")
-    public Comment get(@PathVariable Long id) {
+    public CommentDTO get(@PathVariable Long id) {
         return commentService.getComment(id);
     }
 
@@ -120,7 +119,7 @@ public class CommentController {
                        )
                })
     @PatchMapping("/{adId}/comments/{commentId}")
-    public Comment update(Comment comment) {
+    public CommentDTO update(Comment comment) {
         return commentService.update(comment);
     }
 }
