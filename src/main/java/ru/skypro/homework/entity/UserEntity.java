@@ -1,12 +1,15 @@
 package ru.skypro.homework.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skypro.homework.dto.Role;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,10 +42,9 @@ public class UserEntity {
 
     @Column(name = "email")
     private String email;
-//
-//    @Column(name = "role")
-//    @Enumerated(EnumType.STRING)
-    private int role;
+
+    @Column(name = "role")
+    private String role;
 
     @Column(name = "password")
     private String password;
