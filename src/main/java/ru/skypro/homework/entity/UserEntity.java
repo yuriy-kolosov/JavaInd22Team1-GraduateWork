@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(name = "l_name")
     private String lastname;
 
-    @Column(name = "login")
+    @Column(name = "username")
     private String login;
 
     @Column(name = "phone")

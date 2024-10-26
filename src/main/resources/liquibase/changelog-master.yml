@@ -4,4 +4,10 @@ databaseChangeLog:
         - liquibase/scripts/schema.sql
   - include:
       file:
-        - liquibase/scripts/change-type-role.sql
+        - liquibase/scripts/change_role_type.sql
+  - include:
+      file:
+        - liquibase/scripts/change_name_column_login_to_username.sql
+  - include:
+      file:
+        - liquibase/scripts/add_new_column_enabled_to_users.sql
