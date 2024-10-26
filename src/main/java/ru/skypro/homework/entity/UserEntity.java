@@ -45,4 +45,7 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
+
+    @OneToOne
+    private ImageEntity image;
 }

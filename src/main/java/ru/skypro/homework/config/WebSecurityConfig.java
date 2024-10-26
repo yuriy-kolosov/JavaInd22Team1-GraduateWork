@@ -23,27 +23,28 @@ public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
-            "http://localhost:8080/swagger-ui/index.html",
+            "/swagger-ui/index.html",
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/**"
     };
 
     private final DataSource dataSource;
 
     @Bean
     public JdbcUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails admin =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder(passwordEncoder::encode)
-                        .roles(Role.ADMIN.name())
-                        .authorities(Role.ADMIN.name())
-                        .build();
+//        UserDetails admin =
+//                User.builder()
+//                        .username("user@gmail.com")
+//                        .password("password")
+//                        .passwordEncoder(passwordEncoder::encode)
+//                        .roles(Role.ADMIN.name())
+//                        .authorities(Role.ADMIN.name())
+//                        .build();
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-//        jdbcUserDetailsManager.createUser(admin);
+//        jdbcUserDetailsManager.setUsersByUsernameQuery("select username, password, enabled from users where username=?");
         return jdbcUserDetailsManager;
     }
 
@@ -53,11 +54,11 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authorization ->
                                 authorization
-                                        .requestMatchers("/swagger-ui/**")
+                                        .requestMatchers(AUTH_WHITELIST)
                                         .permitAll()
                                         .requestMatchers("/ads/**", "/users/**")
                                         .authenticated())
-                .cors(withDefaults())
+                .cors(cors->cors.disable())
                 .httpBasic(withDefaults());
         return http.build();
     }

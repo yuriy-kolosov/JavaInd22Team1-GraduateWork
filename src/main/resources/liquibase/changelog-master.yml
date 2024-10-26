@@ -11,3 +11,9 @@ databaseChangeLog:
   - include:
       file:
         - liquibase/scripts/add_new_column_enabled_to_users.sql
+  - include:
+      file:
+        - liquibase/scripts/add_images_table.sql
+  - include:
+      file:
+        - liquibase/scripts/change_type_column_image_in_users.sql
