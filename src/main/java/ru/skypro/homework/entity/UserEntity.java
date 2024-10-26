@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name = "l_name")
     private String lastname;
 
-    @Column(name = "login")
+    @Column(name = "username")
     private String login;
 
     @Column(name = "phone")
@@ -38,10 +38,10 @@ public class UserEntity {
 
     @Column(name = "email")
     private String email;
-//
-//    @Column(name = "role")
-//    @Enumerated(EnumType.STRING)
-    private int role;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "password")
     private String password;
