@@ -1,6 +1,5 @@
 package ru.skypro.homework.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,7 +9,6 @@ public class User {
 
     private Integer id;
 
-
     private String email;
 
     private String firstname;
@@ -19,7 +17,7 @@ public class User {
 
     private String phone;
 
-    private Role role;
+    private String role;
 
     private String image;
 }

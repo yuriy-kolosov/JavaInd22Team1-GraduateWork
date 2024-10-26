@@ -2,12 +2,12 @@ package ru.skypro.homework.dto;
 
 import lombok.Data;
 
-import java.util.Collection;
+import java.util.List;
 
 @Data
 public class Ads {
     //                                      Все объявления (DTO)
     private int count;                  //  Общее количество объявлений
-    private Collection<Ad> results;     //  Коллекция объявлений
+    private List<Ad> results;     //  Коллекция объявлений
 
 }
