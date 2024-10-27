@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.skypro.homework.dto.Role;
-
-import javax.sql.DataSource;
+import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.repository.UserRepository;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -22,7 +20,7 @@ public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
-            "http://localhost:8080/swagger-ui/index.html",
+            "/swagger-ui/**",
             "/v3/api-docs",
             "/webjars/**",
             "/login",
@@ -30,21 +28,13 @@ public class WebSecurityConfig {
             "/**"
     };
 
-    private final DataSource dataSource;
-
     @Bean
-    public JdbcUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails admin =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder(passwordEncoder::encode)
-                        .roles(Role.ADMIN.name())
-                        .authorities(Role.ADMIN.name())
-                        .build();
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-//        jdbcUserDetailsManager.createUser(admin);
-        return jdbcUserDetailsManager;
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return login -> {
+            UserEntity userEntity = userRepository.findByLogin(login)
+                    .orElseThrow(() -> new UsernameNotFoundException("Пользователь с логином " + login + " не найден"));
+            return userEntity;
+        };
     }
 
     @Bean
@@ -55,7 +45,7 @@ public class WebSecurityConfig {
                                 authorization
                                         .requestMatchers("/swagger-ui/**")
                                         .permitAll()
-                                        .requestMatchers("/ads/**", "/users/**")
+                                        .requestMatchers("/ads/**", "/users/**", "/comments/**")
                                         .authenticated())
                 .cors(cors -> cors.disable())
                 .httpBasic(withDefaults());
