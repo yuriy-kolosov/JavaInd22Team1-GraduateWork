@@ -1,5 +1,8 @@
 package ru.skypro.homework.service;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
@@ -8,20 +11,24 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 
+import java.io.IOException;
+
 public interface AdService {
-
-    Ad add(AdEntity adEntity);
-
-    ExtendedAd getExtendedAd(Long id);
-
-    Ad update(Long id, CreateOrUpdateAd updatedAd);
-
-    void delete(Long id);
 
     Ads getAds();
 
-    Ad createAdWithImage(CreateOrUpdateAd updatedAd, MultipartFile adFile);
+    Ad addAdWithImage(CreateOrUpdateAd updatedAd, MultipartFile adFile) throws IOException;
 
-    Ads getAdsMe();
+    ExtendedAd getExtendedAd(Long id);
+
+    void delete(Long id);
+
+    Ad update(Long id, CreateOrUpdateAd updatedAd);
+
+    Ads getAdsMe(Neo4jProperties.Authentication authentication);
+
+    String[] updateAdWithImage(Long id, MultipartFile adFile) throws IOException;
+
+    ResponseEntity<byte[]> getImage(Long id, MultipartFile adFile) throws IOException;
 
 }

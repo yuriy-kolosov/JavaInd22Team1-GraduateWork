@@ -12,14 +12,14 @@ public interface AdMapper {
     AdMapper INSTANCE = Mappers.getMapper(AdMapper.class);
 
     @Mapping(target = "author", source = "author")
-    @Mapping(target = "image", source = "image")
+    @Mapping(target = "image", source = "image", ignore = true)
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "title", source = "title")
     Ad toDTO(AdEntity entity);
 
     @Mapping(target = "author", source = "author")
-    @Mapping(target = "image", source = "image")
+    @Mapping(target = "image", source = "image", ignore = true)
     @Mapping(target = "id", source = "pk")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "title", source = "title")

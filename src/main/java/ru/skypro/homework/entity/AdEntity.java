@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.MediaType;
 
 @Getter
 @Setter
@@ -22,7 +23,13 @@ public class AdEntity {
 
     private Long author;
 
-    private String image;
+    private byte[] image;
+
+    @Column(name = "image_length")
+    private Long imageLength;
+
+    @Column(name = "image_type")
+    private String imageType;
 
     private BigDecimal price;
 
