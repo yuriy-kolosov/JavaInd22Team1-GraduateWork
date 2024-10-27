@@ -4,4 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    public UserEntity findByLogin(String login);
+
 }
