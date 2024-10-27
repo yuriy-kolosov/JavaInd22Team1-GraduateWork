@@ -13,6 +13,7 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.ExtendedAdMapper;
@@ -98,7 +99,9 @@ public class AdServiceImpl implements AdService {
     public Ads getAdsMe(Neo4jProperties.Authentication authentication) {
 
         String login = authentication.getUsername();
-        Long userId = userRepository.findByLogin(login).getId();
+        UserEntity user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с логином %s не найден".formatted(login)));
+        Long userId = user.getId();
 
         List<AdEntity> adEntities = adRepository.findAll();
 
