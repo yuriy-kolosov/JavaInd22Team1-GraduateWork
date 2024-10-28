@@ -37,19 +37,28 @@ public class WebSecurityConfig {
         };
     }
 
-    @Bean
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.csrf((csrf) -> csrf.disable())
+//                .authorizeHttpRequests(
+//                        authorization ->
+//                                authorization
+//                                        .requestMatchers("/swagger-ui/**")
+//                                        .permitAll()
+//                                        .requestMatchers("/ads/**", "/users/**", "/comments/**")
+//                                        .authenticated())
+//                .cors((cors) -> cors.disable());
+//                .httpBasic(withDefaults());
+//        return http.build();
+//    }
+//
+        @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests(
-                        authorization ->
-                                authorization
-                                        .requestMatchers("/swagger-ui/**")
-                                        .permitAll()
-                                        .requestMatchers("/ads/**", "/users/**", "/comments/**")
-                                        .authenticated())
-                .cors(cors -> cors.disable())
-                .httpBasic(withDefaults());
-        return http.build();
+        return http
+                .csrf((csrf) -> csrf.disable())
+                .httpBasic(withDefaults())
+                .build();
+
     }
 
     @Bean
