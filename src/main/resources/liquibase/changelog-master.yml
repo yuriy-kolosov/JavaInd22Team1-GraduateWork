@@ -14,3 +14,12 @@ databaseChangeLog:
   - include:
       file:
         - liquibase/scripts/change_ads_image.sql
+  - include:
+      file:
+        - liquibase/scripts/change_users_s_name.sql
+  - include:
+      file:
+        - liquibase/scripts/change_users_s_name_not_null.sql
+  - include:
+      file:
+        - liquibase/scripts/change_users_reg_date_not_null.sql

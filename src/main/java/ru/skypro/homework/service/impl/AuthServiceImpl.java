@@ -25,15 +25,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean login(String userName, String password) {
-
-        UserDetails userDetails = manager.loadUserByUsername(userName);
-        return passwordEncoder.matches(password, userDetails.getPassword());
+        try {
+            UserDetails userDetails = manager.loadUserByUsername(userName);
+            return passwordEncoder.matches(password, userDetails.getPassword());
+        } catch (RuntimeException r) {
+            return false;
+        }
     }
 
     @Override
     public boolean register(Register register) {
-
-        userRepository.save(register.toRegister(passwordEncoder));
-        return true;
+        try {
+            userRepository.save(register.toRegister(passwordEncoder));
+            return true;
+        } catch (RuntimeException r) {
+            return false;
+        }
     }
+
 }
