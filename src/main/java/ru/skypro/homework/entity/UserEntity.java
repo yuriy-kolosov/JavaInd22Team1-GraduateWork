@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,6 +50,7 @@ public class UserEntity implements UserDetails {
     private String password;
 
     @OneToOne
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private ImageUserEntity image;
 
     public UserEntity(String firstname, String lastname, String login, String phone, String role, String password) {

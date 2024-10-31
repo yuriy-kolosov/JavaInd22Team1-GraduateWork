@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,7 +25,6 @@ public class ImageUserEntity {
     private String mediaType;
 
     @Column(name = "data")
-    @Lob
     private byte[] data;
 
     @Column(name = "url")

@@ -47,3 +47,6 @@ databaseChangeLog:
   - include:
       file:
         - liquibase/scripts/create_table_ads_ad_image.sql
+  - include:
+      file:
+        - liquibase/scripts/change_type_data_in_user_images.sql

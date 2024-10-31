@@ -66,8 +66,10 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        imageEntity.setUrl(url + imageEntity.getId());
-        imageUserService.save(imageEntity);
+ imageUserService.save(imageEntity);
+        imageEntity.setUrl(url+imageEntity.getId());
+        userEntity.setImage(imageEntity);
+        userRepository.save(userEntity);
     }
 
     private UserEntity findByAuthentication(Authentication authentication) {
