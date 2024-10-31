@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import ru.skypro.homework.service.UserService;
 
 @Tag(name = "Пользователи")
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("users")
