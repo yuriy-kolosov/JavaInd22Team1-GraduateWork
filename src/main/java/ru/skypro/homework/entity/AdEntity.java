@@ -23,14 +23,6 @@ public class AdEntity {
 
     private Long author;
 
-    private byte[] image;
-
-    @Column(name = "image_length")
-    private Long imageLength;
-
-    @Column(name = "image_type")
-    private String imageType;
-
     private BigDecimal price;
 
     private String title;
