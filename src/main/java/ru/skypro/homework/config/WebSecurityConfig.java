@@ -3,6 +3,7 @@ package ru.skypro.homework.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,7 @@ import ru.skypro.homework.repository.UserRepository;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@EnableMethodSecurity
 @RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
@@ -21,11 +23,10 @@ public class WebSecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui/**",
-            "/v3/api-docs",
+            "/v3/api-docs/**",
             "/webjars/**",
             "/login",
-            "/register",
-            "/**"
+            "/register"
     };
 
     @Bean
@@ -37,28 +38,19 @@ public class WebSecurityConfig {
         };
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf((csrf) -> csrf.disable())
-//                .authorizeHttpRequests(
-//                        authorization ->
-//                                authorization
-//                                        .requestMatchers("/swagger-ui/**")
-//                                        .permitAll()
-//                                        .requestMatchers("/ads/**", "/users/**", "/comments/**")
-//                                        .authenticated())
-//                .cors((cors) -> cors.disable());
-//                .httpBasic(withDefaults());
-//        return http.build();
-//    }
-//
-        @Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http.authorizeHttpRequests(
+                        authorization ->
+                                authorization
+                                        .requestMatchers(AUTH_WHITELIST)
+                                        .permitAll()
+                                        .requestMatchers("/ads/**", "/users/**", "/comments/**")
+                                        .authenticated())
+                .cors(withDefaults())
                 .csrf((csrf) -> csrf.disable())
-                .httpBasic(withDefaults())
-                .build();
-
+                .httpBasic(withDefaults());
+        return http.build();
     }
 
     @Bean

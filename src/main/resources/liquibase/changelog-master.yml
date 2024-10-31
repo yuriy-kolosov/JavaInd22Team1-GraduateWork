@@ -23,3 +23,27 @@ databaseChangeLog:
   - include:
       file:
         - liquibase/scripts/change_users_reg_date_not_null.sql
+  - include:
+      file:
+        - liquibase/scripts/add_new_table_user_images.sql
+  - include:
+      file:
+        - liquibase/scripts/drop_column_image_in_users.sql
+  - include:
+      file:
+        - liquibase/scripts/add_image_id_to_users.sql
+  - include:
+      file:
+        - liquibase/scripts/change_ads_author_not_null.sql
+  - include:
+      file:
+        - liquibase/scripts/remove_ads_image.sql
+  - include:
+      file:
+        - liquibase/scripts/create_table_ad_image.sql
+  - include:
+      file:
+        - liquibase/scripts/change_users_username_unique.sql
+  - include:
+      file:
+        - liquibase/scripts/create_table_ads_ad_image.sql

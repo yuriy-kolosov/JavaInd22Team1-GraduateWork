@@ -17,10 +17,10 @@ public interface ExtendedAdMapper {
     @Mapping(target = "authorLastName", source = "entity1.lastname")
     @Mapping(target = "description", source = "entity2.description")
     @Mapping(target = "email", source = "entity1.email")
-    @Mapping(target = "image", source = "entity2.image", ignore = true)
     @Mapping(target = "phone", source = "entity1.phone")
     @Mapping(target = "price", source = "entity2.price")
     @Mapping(target = "title", source = "entity2.title")
+    @Mapping(target = "image", ignore = true)
     ExtendedAd toExtendedAd(UserEntity entity1, AdEntity entity2);
 
 }

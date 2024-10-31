@@ -1,15 +1,18 @@
 package ru.skypro.homework.controller;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -42,6 +45,7 @@ public class AdController {
                             )),
             })
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Ads getAllAds() {
         logger.debug("\"Get\" getAllAds method was invoke...");
         return adService.getAds();
@@ -61,8 +65,9 @@ public class AdController {
                     )
             })
     @PostMapping
-    public Ad addAd(@RequestPart("properties") CreateOrUpdateAd createOrUpdateAd
-            , @RequestPart("image") MultipartFile adFile) throws IOException {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public Ad addAd(@Valid @RequestParam("properties") CreateOrUpdateAd createOrUpdateAd
+                    , @RequestParam ("image") MultipartFile adFile) throws IOException {
         logger.debug("\"Post\" addAd method was invoke...");
         return adService.addAdWithImage(createOrUpdateAd, adFile);
     }
@@ -86,7 +91,8 @@ public class AdController {
                     )
             })
     @GetMapping("/{id}")
-    public ExtendedAd getAds(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ExtendedAd getAds(@PathVariable Long id, Authentication authentication) {
         logger.debug("\"Get\" getAds method was invoke...");
         return adService.getExtendedAd(id);
     }
@@ -111,6 +117,7 @@ public class AdController {
                     )
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public void removeId(@PathVariable Long id) {
         logger.debug("\"Delete\" removeId method was invoke...");
         adService.delete(id);
@@ -139,6 +146,7 @@ public class AdController {
                     )
             })
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Ad updateAds(@PathVariable Long id, @RequestBody CreateOrUpdateAd updatedAd) {
         logger.debug("\"Patch\" updateAds method was invoke...");
         return adService.update(id, updatedAd);
@@ -160,7 +168,8 @@ public class AdController {
                     ),
             })
     @GetMapping("/me")
-    public Ads getAdsMeAll(Neo4jProperties.Authentication authentication) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public Ads getAdsMeAll(Authentication authentication) {
         logger.debug("\"Get\" getAdsMe method was invoke...");
         return adService.getAdsMe(authentication);
     }
@@ -187,17 +196,18 @@ public class AdController {
                     )
             })
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String[] updateImage(@PathVariable Long id
             , @RequestParam MultipartFile adFile) throws IOException {
         logger.debug("\"Patch\" updateImage method was invoke...");
         return adService.updateAdWithImage(id, adFile);
     }
 
-    @GetMapping(value = "/{id}/get_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id
-            , @RequestParam MultipartFile adFile) throws IOException {
+    @GetMapping(value = "/{id}/get_image")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
         logger.debug("\"Get\" getImage method was invoke...");
-        return adService.getImage(id, adFile);
+        return adService.getImage(id);
     }
 
 }

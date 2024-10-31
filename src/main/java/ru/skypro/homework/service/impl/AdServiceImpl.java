@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
@@ -12,6 +13,7 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.entity.AdImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.mapper.AdMapper;
@@ -19,6 +21,7 @@ import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.ExtendedAdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.AdImageService;
 import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
@@ -27,12 +30,14 @@ import java.util.List;
 @Service
 public class AdServiceImpl implements AdService {
 
-    private final UserRepository userRepository;
+    private final AdImageService adImageService;
     private final AdRepository adRepository;
+    private final UserRepository userRepository;
 
-    public AdServiceImpl(UserRepository userRepository, AdRepository adRepository) {
-        this.userRepository = userRepository;
+    public AdServiceImpl(AdImageService adImageService, AdRepository adRepository, UserRepository userRepository) {
+        this.adImageService = adImageService;
         this.adRepository = adRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -53,23 +58,22 @@ public class AdServiceImpl implements AdService {
     public Ad addAdWithImage(CreateOrUpdateAd updatedAd, MultipartFile adFile) throws IOException {
 
         AdEntity adEntityCreated = CreateOrUpdateAdMapper.INSTANCE.toEntity(updatedAd);
-
-        adEntityCreated.setImage(adFile.getBytes());
-        adEntityCreated.setImageLength(adFile.getSize());
-//        adEntityCreated.setImageType(adFile.getContentType());
-
         AdEntity savedAdEntity = adRepository.save(adEntityCreated);
+        Long savedAdEntityId = savedAdEntity.getId();
 
         Ad savedAd = AdMapper.INSTANCE.toDTO(savedAdEntity);
-        savedAd.setImage("/ads/" + "{" + savedAdEntity.getId() + "}" + "/get_image");
+        savedAd.setImage("/ads/" + savedAdEntityId + "/get_image");
+
+        adImageService.upload(savedAdEntityId, adFile);
 
         return savedAd;
     }
 
     @Override
     public ExtendedAd getExtendedAd(Long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow();
+//        UserEntity userEntity = userRepository.findByLogin(authentication.getName()).orElseThrow();
         AdEntity adEntity = adRepository.findById(id).orElseThrow();
+        UserEntity userEntity = userRepository.findById(adEntity.getAuthor()).orElseThrow();
         return ExtendedAdMapper.INSTANCE.toExtendedAd(userEntity, adEntity);
     }
 
@@ -87,18 +91,15 @@ public class AdServiceImpl implements AdService {
         adEntityUpdated.setId(adEntity.getId());
         adEntityUpdated.setAuthor(adEntity.getAuthor());
         adEntityUpdated.setAuthor(adEntity.getAuthor());
-        adEntityUpdated.setImage(adEntity.getImage());
-        adEntityUpdated.setImageLength(adEntity.getImageLength());
-        adEntityUpdated.setImageType(adEntity.getImageType());
 
         AdEntity savedAdEntity = adRepository.save(adEntityUpdated);
         return AdMapper.INSTANCE.toDTO(savedAdEntity);
     }
 
     @Override
-    public Ads getAdsMe(Neo4jProperties.Authentication authentication) {
+    public Ads getAdsMe(Authentication authentication) {
 
-        String login = authentication.getUsername();
+        String login = authentication.getName();
         UserEntity user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с логином %s не найден".formatted(login)));
         Long userId = user.getId();
@@ -120,28 +121,26 @@ public class AdServiceImpl implements AdService {
     public String[] updateAdWithImage(Long id, MultipartFile adFile) throws IOException {
 
         AdEntity adEntityUpdated = adRepository.findById(id).orElseThrow();
-
-        adEntityUpdated.setImage(adFile.getBytes());
-        adEntityUpdated.setImageLength(adFile.getSize());
-//        adEntityUpdated.setImageType(adFile.getContentType());
-
         AdEntity savedAdEntity = adRepository.save(adEntityUpdated);
+        Long savedAdEntityId = savedAdEntity.getId();
 
-        String[] stringGetAdImageUrl = {"/ads/" + "{" + adEntityUpdated.getId() + "}" + "/get_image"};
+        adImageService.upload(savedAdEntityId, adFile);
+
+        String[] stringGetAdImageUrl = {"/ads/" + savedAdEntityId + "/get_image"};
 
         return stringGetAdImageUrl;
     }
 
     @Override
-    public ResponseEntity<byte[]> getImage(Long id, MultipartFile adFile) throws IOException {
+    public ResponseEntity<byte[]> getImage(Long id) throws IOException {
 
-        AdEntity adEntity = adRepository.findById(id).orElseThrow();
+        AdImageEntity adImage = adImageService.findAdImage(id);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(adEntity.getImageType()));
-        headers.setContentLength(adEntity.getImageLength());
+        headers.setContentType(MediaType.parseMediaType(adImage.getType()));
+        headers.setContentLength(adImage.getSize());
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(adEntity.getImage());
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(adImage.getData());
     }
 
 }
