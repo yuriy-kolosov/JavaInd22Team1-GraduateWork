@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
@@ -48,7 +49,7 @@ public class UserController {
                     )
             })
     @PostMapping("set_password")
-    public ResponseEntity<Void> setNewPassword(@Valid @RequestBody NewPassword newPassword, Authentication authentication) {
+    public ResponseEntity<Void> setNewPassword(@RequestBody @Valid NewPassword newPassword, Authentication authentication) {
         userService.setNewPassword(newPassword, authentication);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -88,7 +89,7 @@ public class UserController {
                     )
             })
     @PatchMapping("me")
-    public ResponseEntity<UpdateUser> changeUser(@Valid @RequestBody UpdateUser updateUser, Authentication authentication) {
+    public ResponseEntity<UpdateUser> changeUser(@RequestBody @Valid UpdateUser updateUser, Authentication authentication) {
         UpdateUser user = userService.changeUser(updateUser, authentication);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }

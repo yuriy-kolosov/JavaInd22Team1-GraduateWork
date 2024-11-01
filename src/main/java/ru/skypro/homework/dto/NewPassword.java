@@ -2,20 +2,18 @@ package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @Data
-@Validated
 public class NewPassword {
 
-    @Max(16)
-    @Min(8)
+    @Length(min = 8, max = 16)
     private String currentPassword;
 
-    @Max(16)
-    @Min(8)
+    @Length(min = 8, max = 16)
     private String newPassword;
 }

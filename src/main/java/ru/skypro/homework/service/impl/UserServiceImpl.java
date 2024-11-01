@@ -19,6 +19,7 @@ import ru.skypro.homework.service.ImageUserService;
 import ru.skypro.homework.service.UserService;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +36,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setNewPassword(NewPassword newPassword, Authentication authentication) {
         UserEntity userEntity = findByAuthentication(authentication);
-        String currentPassword = passwordEncoder.encode(newPassword.getCurrentPassword());
-        if (!passwordEncoder.matches(userEntity.getPassword(), currentPassword)) {
+        if (!passwordEncoder.matches(newPassword.getCurrentPassword(), userEntity.getPassword())) {
             throw new WrongPassword("не верный пароль");
         }
-        userEntity.setPassword(newPassword.getNewPassword());
+        String password = passwordEncoder.encode(newPassword.getNewPassword());
+        userEntity.setPassword(password);
         userRepository.save(userEntity);
     }
 
@@ -52,6 +53,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UpdateUser changeUser(UpdateUser updateUser, Authentication authentication) {
         UserEntity userEntity = findByAuthentication(authentication);
+        if (Objects.nonNull(updateUser.getFirstname())) {
+            userEntity.setFirstname(updateUser.getFirstname());
+        }
+        if (Objects.nonNull(updateUser.getLastname())) {
+            userEntity.setLastname(updateUser.getLastname());
+        }
+        if (Objects.nonNull(updateUser.getPhone())) {
+            userEntity.setPhone(updateUser.getPhone());
+        }
+        userRepository.save(userEntity);
         return userMapper.toUserUpdate(userEntity);
     }
 
@@ -66,8 +77,8 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
- imageUserService.save(imageEntity);
-        imageEntity.setUrl(url+imageEntity.getId());
+        imageUserService.save(imageEntity);
+        imageEntity.setUrl(url + imageEntity.getId());
         userEntity.setImage(imageEntity);
         userRepository.save(userEntity);
     }
