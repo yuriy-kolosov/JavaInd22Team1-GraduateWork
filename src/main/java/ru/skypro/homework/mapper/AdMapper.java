@@ -12,6 +12,7 @@ public interface AdMapper {
     AdMapper INSTANCE = Mappers.getMapper(AdMapper.class);
 
     @Mapping(target = "author", source = "author")
+    @Mapping(target = "image", expression = "java(\"/ads/get_image/\" + entity.getId())")
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "title", source = "title")

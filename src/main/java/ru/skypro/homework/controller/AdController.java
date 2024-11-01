@@ -1,6 +1,5 @@
 package ru.skypro.homework.controller;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -64,12 +63,12 @@ public class AdController {
                             description = "Unauthorized"
                     )
             })
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public Ad addAd(@Valid @RequestParam("properties") CreateOrUpdateAd createOrUpdateAd
-                    , @RequestParam ("image") MultipartFile adFile) throws IOException {
+    public Ad addAd(@RequestPart("properties") @Valid CreateOrUpdateAd createOrUpdateAd
+            , @RequestPart("image") MultipartFile adFile, Authentication authentication) throws IOException {
         logger.debug("\"Post\" addAd method was invoke...");
-        return adService.addAdWithImage(createOrUpdateAd, adFile);
+        return adService.addAdWithImage(createOrUpdateAd, adFile, authentication);
     }
 
     @Operation(summary = "Получение информации об объявлении", tags = "Объявления",
@@ -203,7 +202,7 @@ public class AdController {
         return adService.updateAdWithImage(id, adFile);
     }
 
-    @GetMapping(value = "/{id}/get_image")
+    @GetMapping(value = "/get_image/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
         logger.debug("\"Get\" getImage method was invoke...");

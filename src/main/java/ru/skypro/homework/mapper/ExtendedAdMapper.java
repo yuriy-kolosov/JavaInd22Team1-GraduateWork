@@ -17,6 +17,7 @@ public interface ExtendedAdMapper {
     @Mapping(target = "authorLastName", source = "entity1.lastname")
     @Mapping(target = "description", source = "entity2.description")
     @Mapping(target = "email", source = "entity1.email")
+    @Mapping(target = "image", expression = "java(\"/ads/get_image/\" + entity2.getId())")
     @Mapping(target = "phone", source = "entity1.phone")
     @Mapping(target = "price", source = "entity2.price")
     @Mapping(target = "title", source = "entity2.title")
