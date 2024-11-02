@@ -22,6 +22,7 @@ import ru.skypro.homework.mapper.ExtendedAdMapper;
 import ru.skypro.homework.repository.AdImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.AdImageService;
 import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.util.List;
 @Service
 public class AdServiceImpl implements AdService {
 
+
     /**
      * Инжекция репозитория png-файлов иллюстрации объявлений
      */
@@ -43,7 +45,10 @@ public class AdServiceImpl implements AdService {
     /**
      * Инжекция репозитория объявлений
      */
+
     private final AdRepository adRepository;
+    private final UserRepository userRepository;
+
 
     /**
      * Инжекция репозитория пользователей
@@ -52,6 +57,7 @@ public class AdServiceImpl implements AdService {
 
     public AdServiceImpl(AdImageRepository adImageRepository, AdRepository adRepository, UserRepository userRepository) {
         this.adImageRepository = adImageRepository;
+
         this.adRepository = adRepository;
         this.userRepository = userRepository;
     }
@@ -88,6 +94,7 @@ public class AdServiceImpl implements AdService {
      * @throws IOException выбрасывается, если пользователь не найден
      */
     @Override
+
     public Ad addAdWithImage(CreateOrUpdateAd updatedAd, MultipartFile adFile
             , Authentication authentication) throws IOException {
 
@@ -95,9 +102,12 @@ public class AdServiceImpl implements AdService {
 
         AdEntity adEntityCreated = CreateOrUpdateAdMapper.INSTANCE.toEntity(updatedAd);
         adEntityCreated.setAuthor(author);
+>
         AdEntity savedAdEntity = adRepository.save(adEntityCreated);
+        Long savedAdEntityId = savedAdEntity.getId();
 
         Ad savedAd = AdMapper.INSTANCE.toDTO(savedAdEntity);
+
 
         AdImageEntity adImageEntity = new AdImageEntity(savedAdEntity);
         adImageEntity.setAdEntity(savedAdEntity);
@@ -105,6 +115,7 @@ public class AdServiceImpl implements AdService {
         adImageEntity.setType(adFile.getContentType());
         adImageEntity.setData(adFile.getBytes());
         adImageRepository.save(adImageEntity);
+
 
         return savedAd;
     }
@@ -117,6 +128,7 @@ public class AdServiceImpl implements AdService {
      */
     @Override
     public ExtendedAd getExtendedAd(Long id) {
+
 
         AdEntity adEntity = adRepository.findById(id).orElseThrow();
         UserEntity userEntity = userRepository.findById(adEntity.getAuthor()).orElseThrow();
@@ -196,6 +208,7 @@ public class AdServiceImpl implements AdService {
 
         String[] stringGetAdImageUrl = {"/ads/get_image/" + id};
 
+
         return stringGetAdImageUrl;
     }
 
@@ -209,6 +222,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public ResponseEntity<byte[]> getImage(Long id) throws IOException {
 
+
         AdImageEntity adImageEntity = adRepository.findById(id).orElseThrow().getAdImageEntity();
 
         HttpHeaders headers = new HttpHeaders();
@@ -216,6 +230,7 @@ public class AdServiceImpl implements AdService {
         headers.setContentLength(adImageEntity.getSize());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(adImageEntity.getData());
+
     }
 
 }

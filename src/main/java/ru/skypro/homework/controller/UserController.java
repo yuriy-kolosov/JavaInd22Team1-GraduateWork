@@ -10,12 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 
 import jakarta.validation.Valid;
+import ru.skypro.homework.service.ImageUserService;
 import ru.skypro.homework.service.UserService;
 
 @Tag(name = "Пользователи")
@@ -24,7 +27,6 @@ import ru.skypro.homework.service.UserService;
 @RequiredArgsConstructor
 @RequestMapping("users")
 public class UserController {
-
 
     private final UserService userService;
 
@@ -47,7 +49,7 @@ public class UserController {
                     )
             })
     @PostMapping("set_password")
-    public ResponseEntity<Void> setNewPassword(@Valid @RequestBody NewPassword newPassword, Authentication authentication) {
+    public ResponseEntity<Void> setNewPassword(@RequestBody @Valid NewPassword newPassword, Authentication authentication) {
         userService.setNewPassword(newPassword, authentication);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -87,7 +89,7 @@ public class UserController {
                     )
             })
     @PatchMapping("me")
-    public ResponseEntity<UpdateUser> changeUser(@Valid @RequestBody UpdateUser updateUser, Authentication authentication) {
+    public ResponseEntity<UpdateUser> changeUser(@RequestBody @Valid UpdateUser updateUser, Authentication authentication) {
         UpdateUser user = userService.changeUser(updateUser, authentication);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
@@ -106,8 +108,9 @@ public class UserController {
                             description = "Unauthorized"
                     )
             })
-    @PatchMapping("me/image")
-    public ResponseEntity<Void> setImage(String image, Authentication authentication) {
+    @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> setImage(@RequestParam MultipartFile image, Authentication authentication) {
+        userService.setImage(image, authentication);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class AdImageEntity {
     protected AdEntity adEntity;
 
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
