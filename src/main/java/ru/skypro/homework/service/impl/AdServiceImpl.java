@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,11 +27,27 @@ import ru.skypro.homework.service.AdService;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Класс, имплементирующий интерфейс сервиса объявлений AdService
+ *
+ * @author yuriy_kolosov
+ */
 @Service
 public class AdServiceImpl implements AdService {
 
+    /**
+     * Инжекция репозитория png-файлов иллюстрации объявлений
+     */
     private final AdImageRepository adImageRepository;
+
+    /**
+     * Инжекция репозитория объявлений
+     */
     private final AdRepository adRepository;
+
+    /**
+     * Инжекция репозитория пользователей
+     */
     private final UserRepository userRepository;
 
     public AdServiceImpl(AdImageRepository adImageRepository, AdRepository adRepository, UserRepository userRepository) {
@@ -39,6 +56,12 @@ public class AdServiceImpl implements AdService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Вывод информации о всех объявлениях из базы данных
+     * Используется метод репозитория {@link JpaRepository#findAll()}
+     *
+     * @return информация о всех объявлениях (DTO)
+     */
     @Override
     public Ads getAds() {
 
@@ -53,6 +76,17 @@ public class AdServiceImpl implements AdService {
         return ads;
     }
 
+    /**
+     * Создание объявления авторизованного пользователя в базе данных
+     * Запись иллюстративного png-файла данного объявления в базу данных
+     * Используется метод репозитория {@link JpaRepository#findAll()}
+     *
+     * @param updatedAd      информация о создаваемом (обновляемом) объявлении (DTO)
+     * @param adFile         png-файл
+     * @param authentication аутентификационные данные авторизованного пользователя
+     * @return данные нового (модифицируемого) объявления
+     * @throws IOException выбрасывается, если пользователь не найден
+     */
     @Override
     public Ad addAdWithImage(CreateOrUpdateAd updatedAd, MultipartFile adFile
             , Authentication authentication) throws IOException {
@@ -75,6 +109,12 @@ public class AdServiceImpl implements AdService {
         return savedAd;
     }
 
+    /**
+     * Вывод информации об объявлении по его идентификатору в базе данных
+     *
+     * @param id идентификатор объявления в базе данных
+     * @return данные объявления
+     */
     @Override
     public ExtendedAd getExtendedAd(Long id) {
 
@@ -83,6 +123,11 @@ public class AdServiceImpl implements AdService {
         return ExtendedAdMapper.INSTANCE.toExtendedAd(userEntity, adEntity);
     }
 
+    /**
+     * Удаление объявления из базы данных по идентификатору
+     *
+     * @param id идентификатор объявления в базе данных
+     */
     @Override
     public void delete(Long id) {
         adRepository.deleteById(id);
@@ -102,6 +147,12 @@ public class AdServiceImpl implements AdService {
         return AdMapper.INSTANCE.toDTO(savedAdEntity);
     }
 
+    /**
+     * Вывод информации о всех объявлениях авторизованного пользователя
+     *
+     * @param authentication аутентификационные данные авторизованного пользователя
+     * @return данные всех объявлений авторизованного пользователя
+     */
     @Override
     public Ads getAdsMe(Authentication authentication) {
 
@@ -123,6 +174,14 @@ public class AdServiceImpl implements AdService {
         return ads;
     }
 
+    /**
+     * Модификация иллюстративного png-файла объявления по его идентификатору в базе данных
+     *
+     * @param id     идентификатор объявления в базе данных
+     * @param adFile png-файл
+     * @return url эндпойнта, реализующего запрос на вывод иллюстративного png-файла
+     * @throws IOException выбрасывается, если пользователь не найден
+     */
     @Override
     public String[] updateAdWithImage(Long id, MultipartFile adFile) throws IOException {
 
@@ -140,6 +199,13 @@ public class AdServiceImpl implements AdService {
         return stringGetAdImageUrl;
     }
 
+    /**
+     * вывод иллюстративного png-файла объявления по его идентификатору в базе данных
+     *
+     * @param id идентификатор объявления в базе данных
+     * @return png-файл
+     * @throws IOException выбрасывается, если пользователь не найден
+     */
     @Override
     public ResponseEntity<byte[]> getImage(Long id) throws IOException {
 
