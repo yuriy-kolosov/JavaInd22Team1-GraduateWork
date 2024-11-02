@@ -22,7 +22,6 @@ import ru.skypro.homework.mapper.ExtendedAdMapper;
 import ru.skypro.homework.repository.AdImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.AdImageService;
 import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
@@ -36,7 +35,6 @@ import java.util.List;
 @Service
 public class AdServiceImpl implements AdService {
 
-
     /**
      * Инжекция репозитория png-файлов иллюстрации объявлений
      */
@@ -45,10 +43,7 @@ public class AdServiceImpl implements AdService {
     /**
      * Инжекция репозитория объявлений
      */
-
     private final AdRepository adRepository;
-    private final UserRepository userRepository;
-
 
     /**
      * Инжекция репозитория пользователей
@@ -102,7 +97,7 @@ public class AdServiceImpl implements AdService {
 
         AdEntity adEntityCreated = CreateOrUpdateAdMapper.INSTANCE.toEntity(updatedAd);
         adEntityCreated.setAuthor(author);
->
+
         AdEntity savedAdEntity = adRepository.save(adEntityCreated);
         Long savedAdEntityId = savedAdEntity.getId();
 
