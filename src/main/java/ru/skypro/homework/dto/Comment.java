@@ -10,7 +10,7 @@ public class Comment {
     private String author;
     private String authorImage;
     private String authorFirstName;
-    private LocalDateTime createdAt;
+    private Long createdAt;
     private Integer pk;
     private String text;
 }

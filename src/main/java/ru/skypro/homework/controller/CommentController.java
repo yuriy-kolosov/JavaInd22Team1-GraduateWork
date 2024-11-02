@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
@@ -45,8 +47,8 @@ public class CommentController {
                     )
             })
     @PostMapping(value = "/{id}/comments")
-    public Comment add(@PathVariable Long id, @Valid CommentEntity comment) {
-        return commentService.add(comment);
+    public Comment add(@PathVariable Long id, @Valid CreateOrUpdateComment comment, Authentication authentication) {
+        return commentService.add(id, comment, authentication);
     }
 
     @Operation(summary = "Получение комментариев объявления", tags = "Комментарии",
