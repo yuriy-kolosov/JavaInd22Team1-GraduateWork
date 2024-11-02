@@ -1,14 +1,19 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.entity.CommentEntity;
+
+import java.util.Collection;
 
 public interface CommentService {
 
-    CommentDTO add(CommentDTO comment);
+    Comment add(CommentEntity comment);
 
-    CommentDTO getComment(Long id);
+    Collection<CommentEntity> getAll();
 
-    void delete(CommentDTO comment);
+    Comment getComment(Long id);
 
-    CommentDTO update(CommentDTO comment);
+    void delete(CommentEntity comment);
+
+    Comment update(CommentEntity comment);
 }
