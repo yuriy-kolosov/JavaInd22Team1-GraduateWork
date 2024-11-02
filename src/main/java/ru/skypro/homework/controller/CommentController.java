@@ -8,15 +8,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 @Tag(name = "Комментарии")
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequestMapping("ads")
+@RequestMapping("/ads")
 public class CommentController {
 
     private final CommentService commentService;
@@ -27,94 +27,94 @@ public class CommentController {
 
 
     @Operation(summary = "Добавление комментария к объявлению", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = Comment.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found"
+                    )
+            })
     @PostMapping(value = "/{id}/comments")
-    public CommentDTO add(@PathVariable Long id, @Valid Comment comment) {
+    public Comment add(@PathVariable Long id, @Valid CommentEntity comment) {
         return commentService.add(comment);
     }
 
     @Operation(summary = "Получение комментариев объявления", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = Comment.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found"
+                    )
+            })
     @GetMapping("/{id}/comments")
-    public CommentDTO get(@PathVariable Long id) {
+    public Comment get(@PathVariable Long id) {
         return commentService.getComment(id);
     }
 
     @Operation(summary = "Удаление комментария", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = Comment.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "403",
-                               description = "Forbidden"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not Found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found"
+                    )
+            })
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public void delete(@Valid Comment comment) {
+    public void delete(@Valid CommentEntity comment) {
         commentService.delete(comment);
     }
 
     @Operation(summary = "Обновление комментария", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                       schema = @Schema(implementation = String.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                    schema = @Schema(implementation = String.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    )
+            })
     @PatchMapping("/{adId}/comments/{commentId}")
-    public CommentDTO update(Comment comment) {
+    public Comment update(CommentEntity comment) {
         return commentService.update(comment);
     }
 }

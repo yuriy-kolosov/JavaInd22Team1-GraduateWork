@@ -1,10 +1,11 @@
 package ru.skypro.homework.dto;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-public class CommentDTO {
+public class Comment {
 
     private String author;
     private String authorImage;
