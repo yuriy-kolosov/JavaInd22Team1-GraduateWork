@@ -1,10 +1,14 @@
 package ru.skypro.homework.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ad_image")
 public class AdImageEntity {
@@ -18,6 +22,8 @@ public class AdImageEntity {
     protected AdEntity adEntity;
 
     @Id
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "file_length")
@@ -26,7 +32,6 @@ public class AdImageEntity {
     @Column(name = "media_type")
     private String type;
 
-//    @Lob
     @Column(name = "data")
     private byte[] data;
 
