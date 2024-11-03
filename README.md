@@ -17,7 +17,7 @@
 Супер-пользователь (роль "ADMIN") имеет расширенные права.
 Техническое задание состоит в разработке Java Spring Boot Application, реализующего backend-составляющую приложения, отвечающую заданному openapi-интерфейсу.
 Описание интерфейса: файл openapi.yaml .
-
+```yaml
 openapi: 3.0.3
 info:
   title: API Documentation
@@ -657,7 +657,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Comment'
-
+```
 Технологический стек проекта: Java Spring Boot Security, WEB RESTful, PostgreSQL, Hibernate, Liquibase, Lombok, Mapstruct.
 Фронтальная составляющая проекта задана (Docker-контейнер).
 
