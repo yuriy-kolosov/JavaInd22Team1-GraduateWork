@@ -62,6 +62,19 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
+    public UserEntity(Long id, String firstname, String surname, String lastname, String login, String phone, LocalDateTime registrationDate, String email, String role, String password) {
+        this.id = id;
+        this.firstname = firstname;
+        this.surname = surname;
+        this.lastname = lastname;
+        this.login = login;
+        this.phone = phone;
+        this.registrationDate = registrationDate;
+        this.email = email;
+        this.role = role;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));

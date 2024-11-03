@@ -16,14 +16,12 @@ public class AdImageEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(name = "ads_ad_image"
             , joinColumns = @JoinColumn(name = "ad_image_id")
-            , inverseJoinColumns = @JoinColumn(name = "ads_id"
-            , nullable = false
-            , unique = true))
+            , inverseJoinColumns = @JoinColumn(name = "ads_id"))
     protected AdEntity adEntity;
 
     @Id
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
     @Column(name = "file_length")

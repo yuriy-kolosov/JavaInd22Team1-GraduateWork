@@ -34,15 +34,3 @@ CREATE TABLE IF NOT EXISTS "comments" (
   created_at  TIMESTAMP NOT NULL,
   "text" VARCHAR(255) NOT NULL
 );
-
--- changeset yuriy-kolosov:2
-ALTER TABLE ads ALTER COLUMN image TYPE VARCHAR(255);
-
-ALTER TABLE ads ALTER COLUMN price TYPE DECIMAL(8,2);
-
-ALTER TABLE users ALTER COLUMN image TYPE VARCHAR(255);
-
--- changeset yuriy-kolosov:3
-ALTER TABLE ads ALTER COLUMN price SET NOT NULL;
-
-

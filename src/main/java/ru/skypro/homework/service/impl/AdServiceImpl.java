@@ -26,6 +26,7 @@ import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Класс, имплементирующий интерфейс сервиса объявлений AdService
@@ -123,7 +124,6 @@ public class AdServiceImpl implements AdService {
      */
     @Override
     public ExtendedAd getExtendedAd(Long id) {
-
 
         AdEntity adEntity = adRepository.findById(id).orElseThrow();
         UserEntity userEntity = userRepository.findById(adEntity.getAuthor()).orElseThrow();
