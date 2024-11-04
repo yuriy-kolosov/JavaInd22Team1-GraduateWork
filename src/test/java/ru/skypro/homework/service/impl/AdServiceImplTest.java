@@ -1,9 +1,12 @@
 package ru.skypro.homework.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +14,9 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.skypro.homework.controller.AdController;
@@ -24,6 +29,7 @@ import ru.skypro.homework.repository.UserRepository;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.skypro.homework.constants.AdServiceTestImpConstants.*;
@@ -35,7 +41,16 @@ public class AdServiceImplTest {
     private MockMvc mockMvc;
 
     @MockBean
+    SecurityFilterChain filterChain;
+
+    @MockBean
+    HttpServletRequest httpServletRequest;
+
+    @MockBean
     UserDetailsService userDetailsService;
+
+    @MockBean
+    PasswordEncoder passwordEncoder;
 
     @MockBean
     private AdRepository adRepository;
@@ -51,6 +66,8 @@ public class AdServiceImplTest {
 
     @InjectMocks
     private AdController adController;
+
+    Logger logger = LoggerFactory.getLogger(AdServiceImplTest.class);
 
     @Test
     @WithMockUser(roles = "USER")
@@ -115,6 +132,21 @@ public class AdServiceImplTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().json(extendedAdObject.toString()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void delete() throws Exception {
+//                                                              Подготовка
+        logger.debug("\"DELETE\" delete test method was invoke...");
+
+        when(filterChain.matches(httpServletRequest)).thenReturn(true);
+        doNothing().when(adRepository).delete(any(AdEntity.class));
+//                                                              Выполнение
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(url + "/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }
