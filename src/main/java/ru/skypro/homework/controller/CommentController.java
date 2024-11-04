@@ -5,23 +5,23 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.skypro.homework.dto.CommentDTO;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.Comments;
+import ru.skypro.homework.dto.CreateOrUpdateComment;
+import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
+import java.util.Collection;
+
 @Tag(name = "Комментарии")
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequestMapping("ads")
+@RequestMapping("/ads")
 public class CommentController {
 
     private final CommentService commentService;
@@ -32,95 +32,95 @@ public class CommentController {
 
 
     @Operation(summary = "Добавление комментария к объявлению", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found"
+                    )
+            })
     @PostMapping(value = "/{id}/comments")
-    public CommentDTO addComment(@PathVariable Long id, @Valid CommentDTO comment) throws IOException {
-        commentService.add(comment);
-        return comment;
+    public Comment add(@PathVariable Long id, @Valid @RequestBody CreateOrUpdateComment comment, Authentication authentication) {
+        return commentService.add(id, comment, authentication);
     }
 
     @Operation(summary = "Получение комментариев объявления", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found"
+                    )
+            })
     @GetMapping("/{id}/comments")
-    public CommentDTO get(@PathVariable Long id) {
+    public Comments get(@PathVariable Long id) {
         return commentService.getComment(id);
     }
 
     @Operation(summary = "Удаление комментария", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                       schema = @Schema(implementation = CommentDTO.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       ),
-                       @ApiResponse(
-                               responseCode = "403",
-                               description = "Forbidden"
-                       ),
-                       @ApiResponse(
-                               responseCode = "404",
-                               description = "Not Found"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CommentEntity.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found"
+                    )
+            })
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public void delete(@Valid CommentDTO comment) {
-        commentService.delete(comment);
+    public void delete(@PathVariable Long adId, @PathVariable Long commentId) {
+        commentService.delete(adId, commentId);
     }
 
     @Operation(summary = "Обновление комментария", tags = "Комментарии",
-               responses = {
-                       @ApiResponse(
-                               responseCode = "200",
-                               description = "OK",
-                               content = @Content(
-                                       mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                       schema = @Schema(implementation = String.class)
-                               )),
-                       @ApiResponse(
-                               responseCode = "401",
-                               description = "Unauthorized"
-                       )
-               })
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                    schema = @Schema(implementation = String.class)
+                            )),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    )
+            })
     @PatchMapping("/{adId}/comments/{commentId}")
-    public CommentDTO update(CommentDTO comment) {
-        return commentService.update(comment);
+    public Comment update(@Valid @RequestBody CreateOrUpdateComment comment,
+                          @PathVariable Long adId, @PathVariable Long commentId) {
+        return commentService.update(comment, adId, commentId);
     }
 }

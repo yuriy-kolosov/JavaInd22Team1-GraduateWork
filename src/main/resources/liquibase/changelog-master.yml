@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - include:
+      file:
+        - liquibase/scripts/schema.sql
+databaseChangeLog:
+  - include:
+      file:
+        - liquibase/scripts/add_ad_id_to_comment.sql
