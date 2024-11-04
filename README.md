@@ -690,4 +690,4 @@ ____
 
 ### Структура базы данных:
 
-![postgres-ji22team1-graduate_work](https://github.com/user-attachments/assets/bf1c688f-1e21-4dfd-9b3b-b8292a3b55fe)
+![graduate_work - public](https://github.com/user-attachments/assets/e1c5b628-25dc-47d5-9523-59423eb75a0d)
