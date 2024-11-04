@@ -18,7 +18,7 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private Long author;
-    private LocalDateTime createdAt;
+    private Long createdAt;
     private String text;
 
 }
