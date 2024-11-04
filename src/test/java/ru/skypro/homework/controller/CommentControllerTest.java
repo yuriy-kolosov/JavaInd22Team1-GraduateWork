@@ -17,6 +17,7 @@ import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.UserService;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +53,7 @@ class CommentControllerTest {
     @AfterEach
     void tearDown() {
         Collection<CommentEntity> comments = commentService.getAll();
-        comments.forEach(comment -> commentService.delete(comment));
+        comments.forEach(comment -> commentService.delete(1L, comment.getId()));
     }
 
     @Test
@@ -128,13 +129,13 @@ class CommentControllerTest {
 
     private Comment createCommentDTO(UserEntity author) {
         Comment comment = new Comment();
-        comment.setAuthor(String.format("%s %s", author.getFirstname(), author.getLastname()));
+        comment.setAuthor(author.getId());
         comment.setText("all good");
-        comment.setCreatedAt(LocalDateTime.now());
+        comment.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("Europe/Moscow")).toInstant().toEpochMilli());
         return comment;
     }
 
-    private CommentEntity createCommentEntity(Long authorId, LocalDateTime createAt) {
+    private CommentEntity createCommentEntity(Long authorId, Long createAt) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setText("all good");
         commentEntity.setAuthor(authorId);
