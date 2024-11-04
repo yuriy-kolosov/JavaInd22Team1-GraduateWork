@@ -50,7 +50,7 @@ public class UserController {
             })
     @PostMapping("set_password")
     public ResponseEntity<Void> setNewPassword(@RequestBody @Valid NewPassword newPassword, Authentication authentication) {
-        userService.setNewPassword(newPassword, authentication);
+        userService.setNewPassword(newPassword, authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -70,7 +70,7 @@ public class UserController {
             })
     @GetMapping("me")
     public ResponseEntity<User> getInfo(Authentication authentication) {
-        User user= userService.getInfo(authentication);
+        User user= userService.getInfo(authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -90,7 +90,7 @@ public class UserController {
             })
     @PatchMapping("me")
     public ResponseEntity<UpdateUser> changeUser(@RequestBody @Valid UpdateUser updateUser, Authentication authentication) {
-        UpdateUser user = userService.changeUser(updateUser, authentication);
+        UpdateUser user = userService.changeUser(updateUser, authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -110,7 +110,7 @@ public class UserController {
             })
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> setImage(@RequestParam MultipartFile image, Authentication authentication) {
-        userService.setImage(image, authentication);
+        userService.setImage(image, authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

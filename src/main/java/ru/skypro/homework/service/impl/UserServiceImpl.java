@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
     private String url;
 
     @Override
-    public void setNewPassword(NewPassword newPassword, Authentication authentication) {
-        UserEntity userEntity = findByAuthentication(authentication);
+    public void setNewPassword(NewPassword newPassword, String userName) {
+        UserEntity userEntity = findByLogin(userName);
         if (!passwordEncoder.matches(newPassword.getCurrentPassword(), userEntity.getPassword())) {
             throw new WrongPassword("не верный пароль");
         }
@@ -45,14 +45,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getInfo(Authentication authentication) {
-        UserEntity userEntity = findByAuthentication(authentication);
+    public User getInfo(String userName) {
+        UserEntity userEntity = findByLogin(userName);
         return userMapper.toUserDto(userEntity);
     }
 
     @Override
-    public UpdateUser changeUser(UpdateUser updateUser, Authentication authentication) {
-        UserEntity userEntity = findByAuthentication(authentication);
+    public UpdateUser changeUser(UpdateUser updateUser, String userName) {
+        UserEntity userEntity = findByLogin(userName);
         if (Objects.nonNull(updateUser.getFirstname())) {
             userEntity.setFirstname(updateUser.getFirstname());
         }
@@ -67,8 +67,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setImage(MultipartFile image, Authentication authentication) {
-        UserEntity userEntity = findByAuthentication(authentication);
+    public void setImage(MultipartFile image, String userName) {
+        UserEntity userEntity = findByLogin(userName);
         ImageUserEntity imageEntity = new ImageUserEntity();
         imageEntity.setMediaType(image.getContentType());
         imageEntity.setFileSize(image.getSize());
@@ -81,11 +81,6 @@ public class UserServiceImpl implements UserService {
         imageEntity.setUrl(url + imageEntity.getId());
         userEntity.setImage(imageEntity);
         userRepository.save(userEntity);
-    }
-
-    private UserEntity findByAuthentication(Authentication authentication) {
-        String login = authentication.getName();
-        return findByLogin(login);
     }
 
     private UserEntity findByLogin(String login) {
