@@ -21,4 +21,7 @@ public class CommentEntity {
     private Long createdAt;
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name="ad_id")
+    private AdEntity ad;
 }

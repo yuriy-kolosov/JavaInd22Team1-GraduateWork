@@ -3,10 +3,13 @@ package ru.skypro.homework.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -37,6 +40,10 @@ public class AdEntity {
 
     @Column(name="description")
     private String description;
+
+    @OneToMany(mappedBy = "ad")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<CommentEntity> comments;
 
     public AdEntity(AdImageEntity adImageEntity) {
         this.adImageEntity = adImageEntity;
