@@ -12,4 +12,12 @@ public class Ad {
     private BigDecimal price;          //  Цена объявления
     private String title;       //  Заголовок объявления
 
+    public Ad(int author, String image, int pk, BigDecimal price, String title) {
+        this.author = author;
+        this.image = image;
+        this.pk = pk;
+        this.price = price;
+        this.title = title;
+    }
+
 }
