@@ -10,10 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
+
+import java.util.Collection;
 
 @Tag(name = "Комментарии")
 @CrossOrigin(value = "http://localhost:3000")
@@ -47,7 +50,7 @@ public class CommentController {
                     )
             })
     @PostMapping(value = "/{id}/comments")
-    public Comment add(@PathVariable Long id, @Valid CreateOrUpdateComment comment, Authentication authentication) {
+    public Comment add(@PathVariable Long id, @Valid @RequestBody CreateOrUpdateComment comment, Authentication authentication) {
         return commentService.add(id, comment, authentication);
     }
 
@@ -70,7 +73,7 @@ public class CommentController {
                     )
             })
     @GetMapping("/{id}/comments")
-    public Comment get(@PathVariable Long id) {
+    public Comments get(@PathVariable Long id) {
         return commentService.getComment(id);
     }
 
@@ -97,8 +100,8 @@ public class CommentController {
                     )
             })
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public void delete(@Valid CommentEntity comment) {
-        commentService.delete(comment);
+    public void delete(@PathVariable Long adId, @PathVariable Long commentId) {
+        commentService.delete(adId, commentId);
     }
 
     @Operation(summary = "Обновление комментария", tags = "Комментарии",
@@ -116,7 +119,8 @@ public class CommentController {
                     )
             })
     @PatchMapping("/{adId}/comments/{commentId}")
-    public Comment update(CommentEntity comment) {
-        return commentService.update(comment);
+    public Comment update(@Valid @RequestBody CreateOrUpdateComment comment,
+                          @PathVariable Long adId, @PathVariable Long commentId) {
+        return commentService.update(comment, adId, commentId);
     }
 }
